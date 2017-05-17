@@ -2,6 +2,8 @@ package usermgmt
 
 import (
 	"encoding/json"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -20,17 +22,38 @@ func (env *Env) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler ...
 func (env *Env) LoginHandler(w http.ResponseWriter, r *http.Request) {
-	var user User
 
-	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-	if err := json.NewEncoder(w).Encode(user); err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	validateSession(w, r)
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	log.Println("LoginHandler called", user.Name, user.Password)
+
+	if err := r.Body.Close(); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var user User
+	if err := json.Unmarshal(body, &user); err != nil {
+		w.WriteHeader(422) // unprocessable entity
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(err); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	log.Println(user.Name, user.Password)
 	if Authenticate(user) {
-		http.Redirect(w, r, "http://localhost:5000/success", http.StatusPermanentRedirect)
+		//http.Redirect(w, r, "http://localhost:5000/success", http.StatusTemporaryRedirect)
+		io.WriteString(w, "Success")
 	} else {
-		http.Redirect(w, r, "http://localhost:5000/login", http.StatusUnauthorized)
+		//http.Redirect(w, r, "http://localhost:5000/login", http.StatusUnauthorized)
+		io.WriteString(w, "fail")
 	}
 }
 
@@ -42,4 +65,23 @@ func (env *Env) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 // Authenticate ...
 func Authenticate(user User) bool {
 	return user.Name == "admin" && user.Password == "pwd"
+}
+
+func getSessionUID(sid string) int {
+	user := User{}
+	//some logic here
+	return user.Id
+}
+
+func updateSession(sid string, uid int) {
+
+}
+
+func generateSessionID() string {
+	//sid := make([]byte, 24)
+	return "a"
+}
+
+func validateSession(w http.ResponseWriter, r *http.Request) {
+
 }

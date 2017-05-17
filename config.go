@@ -14,7 +14,7 @@ type Env struct {
 }
 
 type Session struct {
-	Id              string
+	ID              string
 	Authenticated   bool
 	Unauthenticated bool
 	User            User
