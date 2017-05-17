@@ -10,13 +10,29 @@ import (
 
 // User ...
 type User struct {
-	Id       int
-	Name     string
-	Password string
+	//Id       int    `schema:"Id"`
+	Name     string `schema:"Name"`
+	Password string `schema:"Password"`
 }
 
 // RegisterHandler ...
 func (env *Env) RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	// user := new(User)
+	// decoder := schema.NewDecoder()
+
+	// err = decoder.Decode(user, r.Form)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// }
+
+	// log.Println("User details: ", user.Name, user.Password)
+	name := r.FormValue("Name")
+	log.Println("Name:", name)
 
 }
 
@@ -68,9 +84,9 @@ func Authenticate(user User) bool {
 }
 
 func getSessionUID(sid string) int {
-	user := User{}
+	//user := User{}
 	//some logic here
-	return user.Id
+	return 1
 }
 
 func updateSession(sid string, uid int) {

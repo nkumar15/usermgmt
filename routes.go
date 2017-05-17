@@ -30,8 +30,8 @@ func (env *Env) userRoutes() Routes {
 			env.LoginHandler,
 		},
 		Route{
-			"LoginHandler",
-			"POST",
+			"LogoutHandler",
+			"GET",
 			"/logout",
 			env.LogoutHandler,
 		},
