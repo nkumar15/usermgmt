@@ -1,6 +1,10 @@
 package usermgmt
 
-import "errors"
+import (
+	"errors"
+
+	db "upper.io/db.v3"
+)
 
 // User ...
 type User struct {
@@ -13,13 +17,17 @@ type User struct {
 	JoinedDate string `db:"JoinedDate"`
 }
 
-func (lcdb *lcDatabase) addUser(user *User) error {
+func (ds *DataStore) addUser(user *User) error {
 
-	id, err := lcdb.DB.Collection("Users").Insert(user)
+	id, err := ds.DB.Collection("Users").Insert(user)
 	if err != nil {
 		return err
 	}
 
+	// what if record inserted but interface type is not determined correctly
+	// For eg here in sqlite3 it is int64, what if returned int for pg?
+	// this code won't work in pg
+	// How to deal with this situation?
 	if i, ok := id.(int64); ok {
 		user.ID = i
 	} else {
@@ -30,14 +38,34 @@ func (lcdb *lcDatabase) addUser(user *User) error {
 	return nil
 }
 
-func (lcdb *lcDatabase) getUser(user User) (User, error) {
-	return user, nil
+func (ds *DataStore) getUser(user *User) error {
+
+	col := ds.DB.Collection("Users")
+	res := col.Find(db.Cond{"Id": user.ID})
+	defer res.Close()
+
+	err := res.One(user)
+
+	if err == db.ErrNoMoreRows {
+		return errors.New("ErrNoMoreRows")
+	}
+	return nil
 }
 
-func (lcdb *lcDatabase) deleteUser(user User) (User, error) {
-	return user, nil
+func (ds *DataStore) deleteUser(user *User) error {
+
+	col := ds.DB.Collection("Users")
+	res := col.Find(db.Cond{"Id": user.ID})
+	defer res.Close()
+	return res.Delete()
 }
 
-func (lcdb *lcDatabase) updateUser(user User) (User, error) {
-	return user, nil
+func (ds *DataStore) getUsers(users *[]User) error {
+
+	col := ds.DB.Collection("Users")
+	res := col.Find()
+	defer res.Close()
+
+	err := res.All(users)
+	return err
 }

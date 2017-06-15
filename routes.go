@@ -20,8 +20,26 @@ func (env *Env) userRoutes() Routes {
 		Route{
 			"RegisterHandler",
 			"POST",
-			"/register",
+			"/user",
 			env.AddUserHandler,
+		},
+		Route{
+			"GetUserHandler",
+			"GET",
+			"/user/{Id}",
+			env.GetUserHandler,
+		},
+		Route{
+			"GetUsersHandler",
+			"GET",
+			"/user",
+			env.GetUsersHandler,
+		},
+		Route{
+			"DeleteUserHandler",
+			"DELETE",
+			"/user/{Id}",
+			env.DeleteUserHandler,
 		},
 		Route{
 			"LoginHandler",

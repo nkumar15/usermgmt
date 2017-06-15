@@ -4,11 +4,11 @@ import (
 	"upper.io/db.v3/lib/sqlbuilder"
 )
 
-type lcDatabase struct {
+type DataStore struct {
 	DB sqlbuilder.Database
 }
 
 //Env ... Global environment
 type Env struct {
-	Database lcDatabase
+	DataStore DataStore
 }

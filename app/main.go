@@ -57,7 +57,7 @@ func serveWeb() {
 	if err != nil {
 		log.Fatal("Not able to connect database.", err)
 	}
-	env.Database.DB = db
+	env.DataStore.DB = db
 
 	router := env.NewRouter()
 	n := negroni.New()
