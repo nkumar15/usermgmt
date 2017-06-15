@@ -21,7 +21,7 @@ func (env *Env) userRoutes() Routes {
 			"RegisterHandler",
 			"POST",
 			"/register",
-			env.RegisterHandler,
+			env.AddUserHandler,
 		},
 		Route{
 			"LoginHandler",

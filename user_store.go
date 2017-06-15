@@ -1,7 +1,6 @@
 package usermgmt
 
 import "errors"
-import "log"
 
 // User ...
 type User struct {
@@ -17,9 +16,7 @@ type User struct {
 func (lcdb *lcDatabase) addUser(user *User) error {
 
 	id, err := lcdb.DB.Collection("Users").Insert(user)
-
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -27,7 +24,6 @@ func (lcdb *lcDatabase) addUser(user *User) error {
 		user.ID = i
 	} else {
 		err := errors.New("Id not ok")
-		log.Println(err)
 		return err
 	}
 

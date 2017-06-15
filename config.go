@@ -12,10 +12,3 @@ type lcDatabase struct {
 type Env struct {
 	Database lcDatabase
 }
-
-type Session struct {
-	ID              string
-	Authenticated   bool
-	Unauthenticated bool
-	User            User
-}

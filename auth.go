@@ -8,32 +8,11 @@ import (
 	"net/http"
 )
 
-// User ...
-type User struct {
-	//Id       int    `schema:"Id"`
-	Name     string `schema:"Name"`
-	Password string `schema:"Password"`
-}
-
-// RegisterHandler ...
-func (env *Env) RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		log.Println(err.Error())
-	}
-
-	// user := new(User)
-	// decoder := schema.NewDecoder()
-
-	// err = decoder.Decode(user, r.Form)
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// }
-
-	// log.Println("User details: ", user.Name, user.Password)
-	name := r.FormValue("Name")
-	log.Println("Name:", name)
-
+type Session struct {
+	ID              string
+	Authenticated   bool
+	Unauthenticated bool
+	User            User
 }
 
 // LoginHandler ...
