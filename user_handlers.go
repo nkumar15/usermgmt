@@ -25,7 +25,7 @@ func (env *Env) AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := user.addUser(env.DB); err != nil {
+	if err := env.userDb.AddUser(user); err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}
@@ -43,9 +43,8 @@ func (env *Env) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := new(User)
-	user.ID = id
-	if err = user.getUser(env.DB); err != nil {
+	user, err := env.userDb.GetUserById(id)
+	if err != nil {
 		if err.Error() == "ErrNoMoreRows" {
 			httpStatusNotFound(w, r, err)
 		} else {
@@ -60,13 +59,12 @@ func (env *Env) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 // GetUsersHandler ...
 func (env *Env) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 
-	user := new(User)
-	users, err := user.getUsers(env.DB)
-
+	users, err := env.userDb.GetUsers()
 	if err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}
+
 	renderJSON(w, users)
 }
 
@@ -80,11 +78,10 @@ func (env *Env) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := new(User)
-	user.ID = id
-	if err = user.deleteUser(env.DB); err != nil {
+	if err = env.userDb.DeleteUserById(id); err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}
+
 	httpStatusNoContent(w, r)
 }

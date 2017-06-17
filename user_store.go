@@ -18,8 +18,21 @@ type User struct {
 	JoinedDate string `db:"JoinedDate"`
 }
 
-func (user *User) addUser(dbs sqlbuilder.Database) error {
+type UserStore interface {
+	AddUser(*User) error
+	GetUserById(id int64) (*User, error)
+	GetUsers() (*[]User, error)
+	DeleteUserById(id int64) error
+	//UpdateUser(userDb *UserDB) error
+}
 
+type UserDB struct {
+	DB sqlbuilder.Database
+}
+
+func (userDb *UserDB) AddUser(user *User) error {
+
+	dbs := userDb.DB
 	id, err := dbs.Collection("Users").Insert(user)
 	if err != nil {
 		return err
@@ -39,35 +52,39 @@ func (user *User) addUser(dbs sqlbuilder.Database) error {
 	return nil
 }
 
-func (user *User) getUser(dbs sqlbuilder.Database) error {
+func (userDb *UserDB) GetUserById(id int64) (*User, error) {
 
+	dbs := userDb.DB
 	col := dbs.Collection("Users")
-	res := col.Find(db.Cond{"Id": user.ID})
+	res := col.Find(db.Cond{"Id": id})
 	defer res.Close()
 
+	user := new(User)
 	err := res.One(user)
 
 	if err == db.ErrNoMoreRows {
-		return errors.New("ErrNoMoreRows")
+		return nil, errors.New("ErrNoMoreRows")
 	}
-	return nil
+	return user, nil
 }
 
-func (user *User) deleteUser(dbs sqlbuilder.Database) error {
-
-	col := dbs.Collection("Users")
-	res := col.Find(db.Cond{"Id": user.ID})
-	defer res.Close()
-	return res.Delete()
-}
-
-func (user *User) getUsers(dbs sqlbuilder.Database) (*[]User, error) {
+func (userDb *UserDB) GetUsers() (*[]User, error) {
 
 	var users []User
+	dbs := userDb.DB
 	col := dbs.Collection("Users")
 	res := col.Find()
 	defer res.Close()
 
 	err := res.All(&users)
 	return &users, err
+}
+
+func (userDb *UserDB) DeleteUserById(id int64) error {
+
+	dbs := userDb.DB
+	col := dbs.Collection("Users")
+	res := col.Find(db.Cond{"Id": id})
+	defer res.Close()
+	return res.Delete()
 }
