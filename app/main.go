@@ -16,7 +16,7 @@ import (
 func connectDB() (sqlbuilder.Database, error) {
 
 	var sqliteSettings = sqlite.ConnectionURL{
-		Database: `D:\codes\database\location\database.sqlite`,
+		Database: `D:\codes\database\database.sqlite`,
 	}
 
 	var pgSettings = postgresql.ConnectionURL{
@@ -45,20 +45,19 @@ func connectDB() (sqlbuilder.Database, error) {
 
 	err = db.Ping()
 	if err != nil {
-		return db, errors.New("Couldn't connect database")
+		return db, errors.New("Couldn't ping database")
 	}
 	return db, nil
 }
 
 func serveWeb() {
-	env := usermgmt.Env{}
-	db, err := connectDB()
 
+	db, err := connectDB()
 	if err != nil {
 		log.Fatal("Not able to connect database.", err)
 	}
-	env.DataStore.DB = db
 
+	env := usermgmt.Env{DB: db}
 	router := env.NewRouter()
 	n := negroni.New()
 	n.Use(negroni.NewLogger())

@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	db "upper.io/db.v3"
+	"upper.io/db.v3/lib/sqlbuilder"
 )
 
 // User ...
@@ -17,9 +18,9 @@ type User struct {
 	JoinedDate string `db:"JoinedDate"`
 }
 
-func (ds *DataStore) addUser(user *User) error {
+func (user *User) addUser(dbs sqlbuilder.Database) error {
 
-	id, err := ds.DB.Collection("Users").Insert(user)
+	id, err := dbs.Collection("Users").Insert(user)
 	if err != nil {
 		return err
 	}
@@ -38,9 +39,9 @@ func (ds *DataStore) addUser(user *User) error {
 	return nil
 }
 
-func (ds *DataStore) getUser(user *User) error {
+func (user *User) getUser(dbs sqlbuilder.Database) error {
 
-	col := ds.DB.Collection("Users")
+	col := dbs.Collection("Users")
 	res := col.Find(db.Cond{"Id": user.ID})
 	defer res.Close()
 
@@ -52,20 +53,21 @@ func (ds *DataStore) getUser(user *User) error {
 	return nil
 }
 
-func (ds *DataStore) deleteUser(user *User) error {
+func (user *User) deleteUser(dbs sqlbuilder.Database) error {
 
-	col := ds.DB.Collection("Users")
+	col := dbs.Collection("Users")
 	res := col.Find(db.Cond{"Id": user.ID})
 	defer res.Close()
 	return res.Delete()
 }
 
-func (ds *DataStore) getUsers(users *[]User) error {
+func (user *User) getUsers(dbs sqlbuilder.Database) (*[]User, error) {
 
-	col := ds.DB.Collection("Users")
+	var users []User
+	col := dbs.Collection("Users")
 	res := col.Find()
 	defer res.Close()
 
-	err := res.All(users)
-	return err
+	err := res.All(&users)
+	return &users, err
 }
