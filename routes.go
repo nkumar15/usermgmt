@@ -42,6 +42,18 @@ func (env *Env) userRoutes() Routes {
 			env.DeleteUserHandler,
 		},
 		Route{
+			"UpdateUserHandler",
+			"PUT",
+			"/user/{Id}",
+			env.UpdateUserHandler,
+		},
+	}
+	return userRoutes
+}
+
+func (env *Env) authRoutes() Routes {
+	var authRoutes = Routes{
+		Route{
 			"LoginHandler",
 			"POST",
 			"/login",
@@ -54,5 +66,6 @@ func (env *Env) userRoutes() Routes {
 			env.LogoutHandler,
 		},
 	}
-	return userRoutes
+
+	return authRoutes
 }

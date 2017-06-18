@@ -8,6 +8,12 @@ import (
 	"github.com/gorilla/schema"
 )
 
+func getIDFromRequest(r *http.Request) (int64, error) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseInt(vars["Id"], 10, 64)
+	return id, err
+}
+
 // AddUserHandler ...
 func (env *Env) AddUserHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -36,8 +42,7 @@ func (env *Env) AddUserHandler(w http.ResponseWriter, r *http.Request) {
 // GetUserHandler ...
 func (env *Env) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
-	vars := mux.Vars(r)
-	id, err := strconv.ParseInt(vars["Id"], 10, 64)
+	id, err := getIDFromRequest(r)
 	if err != nil {
 		httpStatusBadRequest(w, err)
 		return
@@ -71,8 +76,7 @@ func (env *Env) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 // DeleteUserHandler ...
 func (env *Env) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
-	vars := mux.Vars(r)
-	id, err := strconv.ParseInt(vars["Id"], 10, 64)
+	id, err := getIDFromRequest(r)
 	if err != nil {
 		httpStatusBadRequest(w, err)
 		return
@@ -84,4 +88,32 @@ func (env *Env) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpStatusNoContent(w, r)
+}
+
+// UpdateUserHandler ...
+func (env *Env) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+
+	id, err := getIDFromRequest(r)
+	if err != nil {
+		httpStatusBadRequest(w, err)
+		return
+	}
+
+	err = r.ParseForm()
+	user := new(User)
+
+	decoder := schema.NewDecoder()
+	err = decoder.Decode(user, r.Form)
+	if err != nil {
+		httpStatusInternalServerError(w, err)
+		return
+	}
+
+	user.ID = id
+	if err := env.userDb.UpdateUser(user); err != nil {
+		httpStatusInternalServerError(w, err)
+		return
+	}
+
+	renderJSON(w, user)
 }

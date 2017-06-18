@@ -23,7 +23,7 @@ type UserStore interface {
 	GetUserById(id int64) (*User, error)
 	GetUsers() (*[]User, error)
 	DeleteUserById(id int64) error
-	//UpdateUser(userDb *UserDB) error
+	UpdateUser(user *User) error
 }
 
 type UserDB struct {
@@ -87,4 +87,23 @@ func (userDb *UserDB) DeleteUserById(id int64) error {
 	res := col.Find(db.Cond{"Id": id})
 	defer res.Close()
 	return res.Delete()
+}
+
+func (userDb *UserDB) UpdateUser(user *User) error {
+	dbs := userDb.DB
+	col := dbs.Collection("Users")
+	res := col.Find(db.Cond{"Id": user.ID})
+	defer res.Close()
+	presentUser := new(User)
+	err := res.One(presentUser)
+	if err != nil {
+		return err
+	}
+	presentUser = user
+	err = res.Update(presentUser)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
