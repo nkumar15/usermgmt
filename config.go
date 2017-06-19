@@ -10,6 +10,7 @@ type Configuration struct {
 
 // NewConfigurationironment ...
 func NewConfiguration(db sqlbuilder.Database) *Configuration {
+
 	usrDb := UserDB{DB: db}
 	conf := Configuration{userDb: usrDb}
 	return &conf

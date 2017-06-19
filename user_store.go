@@ -90,6 +90,7 @@ func (userDb *UserDB) DeleteUserById(id int64) error {
 }
 
 func (userDb *UserDB) UpdateUser(user *User) error {
+
 	dbs := userDb.DB
 	col := dbs.Collection("Users")
 	res := col.Find(db.Cond{"Id": user.ID})
@@ -104,6 +105,5 @@ func (userDb *UserDB) UpdateUser(user *User) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

@@ -16,6 +16,7 @@ type Route struct {
 type Routes []Route
 
 func (conf *Configuration) userRoutes() Routes {
+
 	var userRoutes = Routes{
 		Route{
 			"AddUserHandler",

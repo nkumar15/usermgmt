@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/schema"
 )
 
-func getIDFromRequest(r *http.Request) (int64, error) {
+func getUserIDFromRequest(r *http.Request) (int64, error) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["Id"], 10, 64)
 	return id, err
@@ -35,14 +35,13 @@ func (conf *Configuration) AddUserHandler(w http.ResponseWriter, r *http.Request
 		httpStatusInternalServerError(w, err)
 		return
 	}
-
 	renderJSON(w, user)
 }
 
 // GetUserHandler ...
 func (conf *Configuration) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
-	id, err := getIDFromRequest(r)
+	id, err := getUserIDFromRequest(r)
 	if err != nil {
 		httpStatusBadRequest(w, err)
 		return
@@ -57,7 +56,6 @@ func (conf *Configuration) GetUserHandler(w http.ResponseWriter, r *http.Request
 		}
 		return
 	}
-
 	renderJSON(w, user)
 }
 
@@ -69,14 +67,13 @@ func (conf *Configuration) GetUsersHandler(w http.ResponseWriter, r *http.Reques
 		httpStatusInternalServerError(w, err)
 		return
 	}
-
 	renderJSON(w, users)
 }
 
 // DeleteUserHandler ...
 func (conf *Configuration) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
-	id, err := getIDFromRequest(r)
+	id, err := getUserIDFromRequest(r)
 	if err != nil {
 		httpStatusBadRequest(w, err)
 		return
@@ -86,14 +83,13 @@ func (conf *Configuration) DeleteUserHandler(w http.ResponseWriter, r *http.Requ
 		httpStatusInternalServerError(w, err)
 		return
 	}
-
 	httpStatusNoContent(w, r)
 }
 
 // UpdateUserHandler ...
 func (conf *Configuration) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 
-	id, err := getIDFromRequest(r)
+	id, err := getUserIDFromRequest(r)
 	if err != nil {
 		httpStatusBadRequest(w, err)
 		return
@@ -114,6 +110,5 @@ func (conf *Configuration) UpdateUserHandler(w http.ResponseWriter, r *http.Requ
 		httpStatusInternalServerError(w, err)
 		return
 	}
-
 	renderJSON(w, user)
 }

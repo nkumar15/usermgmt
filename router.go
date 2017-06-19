@@ -8,6 +8,7 @@ import (
 
 // NewRouter ...
 func (conf *Configuration) NewRouter() *mux.Router {
+
 	router := mux.NewRouter().StrictSlash(true)
 
 	for _, route := range conf.userRoutes() {
@@ -21,6 +22,5 @@ func (conf *Configuration) NewRouter() *mux.Router {
 			Name(route.Name).
 			Handler(handler)
 	}
-
 	return router
 }
