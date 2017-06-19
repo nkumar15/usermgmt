@@ -7,10 +7,10 @@ import (
 )
 
 // NewRouter ...
-func (env *Env) NewRouter() *mux.Router {
+func (conf *Configuration) NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
-	for _, route := range env.userRoutes() {
+	for _, route := range conf.userRoutes() {
 		var handler http.Handler
 
 		handler = route.HandlerFunc

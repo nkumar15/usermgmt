@@ -15,7 +15,7 @@ func getIDFromRequest(r *http.Request) (int64, error) {
 }
 
 // AddUserHandler ...
-func (env *Env) AddUserHandler(w http.ResponseWriter, r *http.Request) {
+func (conf *Configuration) AddUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
@@ -31,7 +31,7 @@ func (env *Env) AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := env.userDb.AddUser(user); err != nil {
+	if err := conf.userDb.AddUser(user); err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}
@@ -40,7 +40,7 @@ func (env *Env) AddUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetUserHandler ...
-func (env *Env) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+func (conf *Configuration) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	id, err := getIDFromRequest(r)
 	if err != nil {
@@ -48,7 +48,7 @@ func (env *Env) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := env.userDb.GetUserById(id)
+	user, err := conf.userDb.GetUserById(id)
 	if err != nil {
 		if err.Error() == "ErrNoMoreRows" {
 			httpStatusNotFound(w, r, err)
@@ -62,9 +62,9 @@ func (env *Env) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetUsersHandler ...
-func (env *Env) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+func (conf *Configuration) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 
-	users, err := env.userDb.GetUsers()
+	users, err := conf.userDb.GetUsers()
 	if err != nil {
 		httpStatusInternalServerError(w, err)
 		return
@@ -74,7 +74,7 @@ func (env *Env) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteUserHandler ...
-func (env *Env) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+func (conf *Configuration) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	id, err := getIDFromRequest(r)
 	if err != nil {
@@ -82,7 +82,7 @@ func (env *Env) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = env.userDb.DeleteUserById(id); err != nil {
+	if err = conf.userDb.DeleteUserById(id); err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}
@@ -91,7 +91,7 @@ func (env *Env) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateUserHandler ...
-func (env *Env) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (conf *Configuration) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	id, err := getIDFromRequest(r)
 	if err != nil {
@@ -110,7 +110,7 @@ func (env *Env) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.ID = id
-	if err := env.userDb.UpdateUser(user); err != nil {
+	if err := conf.userDb.UpdateUser(user); err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}

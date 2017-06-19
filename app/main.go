@@ -57,8 +57,8 @@ func serveWeb() {
 		log.Fatal("Not able to connect database.", err)
 	}
 
-	env := usermgmt.NewEnvironment(db)
-	router := env.NewRouter()
+	Configuration := usermgmt.NewConfiguration(db)
+	router := Configuration.NewRouter()
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
 	n.UseHandler(router)

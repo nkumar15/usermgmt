@@ -15,57 +15,38 @@ type Route struct {
 // Routes ...
 type Routes []Route
 
-func (env *Env) userRoutes() Routes {
+func (conf *Configuration) userRoutes() Routes {
 	var userRoutes = Routes{
 		Route{
-			"RegisterHandler",
+			"AddUserHandler",
 			"POST",
 			"/user",
-			env.AddUserHandler,
+			conf.AddUserHandler,
 		},
 		Route{
 			"GetUserHandler",
 			"GET",
 			"/user/{Id}",
-			env.GetUserHandler,
+			conf.GetUserHandler,
 		},
 		Route{
 			"GetUsersHandler",
 			"GET",
 			"/user",
-			env.GetUsersHandler,
+			conf.GetUsersHandler,
 		},
 		Route{
 			"DeleteUserHandler",
 			"DELETE",
 			"/user/{Id}",
-			env.DeleteUserHandler,
+			conf.DeleteUserHandler,
 		},
 		Route{
 			"UpdateUserHandler",
 			"PUT",
 			"/user/{Id}",
-			env.UpdateUserHandler,
+			conf.UpdateUserHandler,
 		},
 	}
 	return userRoutes
-}
-
-func (env *Env) authRoutes() Routes {
-	var authRoutes = Routes{
-		Route{
-			"LoginHandler",
-			"POST",
-			"/login",
-			env.LoginHandler,
-		},
-		Route{
-			"LogoutHandler",
-			"GET",
-			"/logout",
-			env.LogoutHandler,
-		},
-	}
-
-	return authRoutes
 }

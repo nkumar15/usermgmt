@@ -2,15 +2,15 @@ package usermgmt
 
 import "upper.io/db.v3/lib/sqlbuilder"
 
-//Env ... Global environment
-type Env struct {
+//Configuration ... Global Configurationironment
+type Configuration struct {
 	userDb UserDB
 	//logger *logrus.Logger
 }
 
-// NewEnvironment ...
-func NewEnvironment(db sqlbuilder.Database) *Env {
+// NewConfigurationironment ...
+func NewConfiguration(db sqlbuilder.Database) *Configuration {
 	usrDb := UserDB{DB: db}
-	env := Env{userDb: usrDb}
-	return &env
+	conf := Configuration{userDb: usrDb}
+	return &conf
 }
