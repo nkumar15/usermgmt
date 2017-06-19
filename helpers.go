@@ -16,29 +16,35 @@ func fillUser(user *User) {
 }
 
 func httpGenericErr(w http.ResponseWriter) {
+
 	http.Error(w, "Something went wrong, check the logs", http.StatusInternalServerError)
 }
 
 func httpStatusInternalServerError(w http.ResponseWriter, err error) {
+
 	log.Println(err.Error())
 	http.Error(w, err.Error(), http.StatusInternalServerError)
 }
 
 func httpStatusBadRequest(w http.ResponseWriter, err error) {
+
 	log.Println(err.Error())
 	http.Error(w, err.Error(), http.StatusBadRequest)
 }
 
 func httpStatusNotFound(w http.ResponseWriter, r *http.Request, err error) {
+
 	log.Println(err.Error())
 	http.NotFound(w, r)
 }
 
 func httpStatusNoContent(w http.ResponseWriter, r *http.Request) {
+
 	w.WriteHeader(http.StatusNoContent)
 }
 
 func renderJSON(w http.ResponseWriter, data interface{}) {
+
 	var j []byte
 	var err error
 
