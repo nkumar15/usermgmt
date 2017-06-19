@@ -9,6 +9,7 @@ import (
 )
 
 func getUserIDFromRequest(r *http.Request) (int64, error) {
+
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["Id"], 10, 64)
 	return id, err
