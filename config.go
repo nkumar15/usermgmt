@@ -1,17 +1,21 @@
 package usermgmt
 
-import "upper.io/db.v3/lib/sqlbuilder"
+import (
+	"github.com/sirupsen/logrus"
+	"upper.io/db.v3/lib/sqlbuilder"
+)
 
-//Configuration ... Global Configurationironment
+//Configuration ...
 type Configuration struct {
-	userDb UserDB
-	//logger *logrus.Logger
+	userDb    UserDB
+	appLogger AppLogger
 }
 
-// NewConfigurationironment ...
-func NewConfiguration(db sqlbuilder.Database) *Configuration {
+// NewConfiguration ...
+func NewConfiguration(db sqlbuilder.Database, logger *logrus.Logger) *Configuration {
 
 	usrDb := UserDB{DB: db}
-	conf := Configuration{userDb: usrDb}
+	appLog := AppLogger{logger: logger}
+	conf := Configuration{userDb: usrDb, appLogger: appLog}
 	return &conf
 }

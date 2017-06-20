@@ -48,7 +48,7 @@ func (conf *Configuration) GetUserHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err := conf.userDb.GetUserById(id)
+	user, err := conf.userDb.GetUserByID(id)
 	if err != nil {
 		if err.Error() == "ErrNoMoreRows" {
 			httpStatusNotFound(w, r, err)
@@ -80,7 +80,7 @@ func (conf *Configuration) DeleteUserHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	if err = conf.userDb.DeleteUserById(id); err != nil {
+	if err = conf.userDb.DeleteUserByID(id); err != nil {
 		httpStatusInternalServerError(w, err)
 		return
 	}

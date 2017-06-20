@@ -9,9 +9,36 @@ import (
 	"upper.io/db.v3/postgresql"
 	"upper.io/db.v3/sqlite"
 
+	"os"
+
 	"github.com/nkumar15/usermgmt"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 )
+
+func openFile(name string) (*os.File, error) {
+	return os.OpenFile(name, os.O_CREATE|os.O_WRONLY, 0666)
+}
+
+func setupLogger(mode string) *logrus.Logger {
+	logger := logrus.New()
+
+	if mode == "production" {
+		logger.Formatter = new(logrus.JSONFormatter)
+		logger.Level = logrus.DebugLevel
+	} else {
+		logger.Formatter = new(logrus.TextFormatter)
+		logger.Level = logrus.InfoLevel
+	}
+
+	file, err := openFile("logrus.log")
+	if err != nil {
+		log.Fatal("cannot open log file.")
+		os.Exit(1)
+	}
+	logger.Out = file
+	return logger
+}
 
 func connectDB() (sqlbuilder.Database, error) {
 
@@ -42,7 +69,6 @@ func connectDB() (sqlbuilder.Database, error) {
 	if err != nil {
 		return db, errors.New("Couldn't connect database")
 	}
-
 	err = db.Ping()
 	if err != nil {
 		return db, errors.New("Couldn't ping database")
@@ -57,7 +83,8 @@ func serveWeb() {
 		log.Fatal("Not able to connect database.", err)
 	}
 
-	conf := usermgmt.NewConfiguration(db)
+	logger := setupLogger("development")
+	conf := usermgmt.NewConfiguration(db, logger)
 	router := conf.NewRouter()
 
 	n := negroni.New()

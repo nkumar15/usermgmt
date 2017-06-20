@@ -18,6 +18,7 @@ type User struct {
 	JoinedDate string `db:"JoinedDate"`
 }
 
+// UserStore ...
 type UserStore interface {
 	AddUser(*User) error
 	GetUserById(id int64) (*User, error)
@@ -26,10 +27,12 @@ type UserStore interface {
 	UpdateUser(user *User) error
 }
 
+// UserDB ...
 type UserDB struct {
 	DB sqlbuilder.Database
 }
 
+// AddUser ...
 func (userDb *UserDB) AddUser(user *User) error {
 
 	dbs := userDb.DB
@@ -52,7 +55,8 @@ func (userDb *UserDB) AddUser(user *User) error {
 	return nil
 }
 
-func (userDb *UserDB) GetUserById(id int64) (*User, error) {
+// GetUserByID ...
+func (userDb *UserDB) GetUserByID(id int64) (*User, error) {
 
 	dbs := userDb.DB
 	col := dbs.Collection("Users")
@@ -68,6 +72,7 @@ func (userDb *UserDB) GetUserById(id int64) (*User, error) {
 	return user, nil
 }
 
+// GetUsers ...
 func (userDb *UserDB) GetUsers() (*[]User, error) {
 
 	var users []User
@@ -80,7 +85,8 @@ func (userDb *UserDB) GetUsers() (*[]User, error) {
 	return &users, err
 }
 
-func (userDb *UserDB) DeleteUserById(id int64) error {
+// DeleteUserByID ...
+func (userDb *UserDB) DeleteUserByID(id int64) error {
 
 	dbs := userDb.DB
 	col := dbs.Collection("Users")
@@ -89,6 +95,7 @@ func (userDb *UserDB) DeleteUserById(id int64) error {
 	return res.Delete()
 }
 
+// UpdateUser ...
 func (userDb *UserDB) UpdateUser(user *User) error {
 
 	dbs := userDb.DB
