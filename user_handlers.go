@@ -16,84 +16,78 @@ func getUserIDFromRequest(r *http.Request) (int64, error) {
 }
 
 // AddUserHandler ...
-func (conf *Configuration) AddUserHandler(w http.ResponseWriter, r *http.Request) {
+func AddUserHandler(conf *Configuration, w http.ResponseWriter, r *http.Request) (int, error) {
 
 	err := r.ParseForm()
 	if err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 
 	user := new(User)
 	decoder := schema.NewDecoder()
 	err = decoder.Decode(user, r.Form)
 	if err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 
 	if err := conf.userDb.AddUser(user); err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 	renderJSON(w, user)
+	return 200, nil
 }
 
 // GetUserHandler ...
-func (conf *Configuration) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+func GetUserHandler(conf *Configuration, w http.ResponseWriter, r *http.Request) (int, error) {
 
 	id, err := getUserIDFromRequest(r)
 	if err != nil {
-		httpStatusBadRequest(w, err)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	user, err := conf.userDb.GetUserByID(id)
 	if err != nil {
 		if err.Error() == "ErrNoMoreRows" {
-			httpStatusNotFound(w, r, err)
-		} else {
-			httpStatusInternalServerError(w, err)
+			return http.StatusNotFound, err
 		}
-		return
+		return http.StatusInternalServerError, err
 	}
 	renderJSON(w, user)
+	return 200, nil
 }
 
 // GetUsersHandler ...
-func (conf *Configuration) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+func GetUsersHandler(conf *Configuration, w http.ResponseWriter, r *http.Request) (int, error) {
 
 	users, err := conf.userDb.GetUsers()
 	if err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 	renderJSON(w, users)
+	return 200, nil
 }
 
 // DeleteUserHandler ...
-func (conf *Configuration) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteUserHandler(conf *Configuration, w http.ResponseWriter, r *http.Request) (int, error) {
 
 	id, err := getUserIDFromRequest(r)
 	if err != nil {
-		httpStatusBadRequest(w, err)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	if err = conf.userDb.DeleteUserByID(id); err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 	httpStatusNoContent(w, r)
+	return 200, nil
 }
 
 // UpdateUserHandler ...
-func (conf *Configuration) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateUserHandler(conf *Configuration, w http.ResponseWriter, r *http.Request) (int, error) {
 
 	id, err := getUserIDFromRequest(r)
 	if err != nil {
-		httpStatusBadRequest(w, err)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	err = r.ParseForm()
@@ -102,14 +96,13 @@ func (conf *Configuration) UpdateUserHandler(w http.ResponseWriter, r *http.Requ
 	decoder := schema.NewDecoder()
 	err = decoder.Decode(user, r.Form)
 	if err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 
 	user.ID = id
 	if err := conf.userDb.UpdateUser(user); err != nil {
-		httpStatusInternalServerError(w, err)
-		return
+		return http.StatusInternalServerError, err
 	}
 	renderJSON(w, user)
+	return 200, nil
 }

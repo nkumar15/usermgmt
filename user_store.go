@@ -28,12 +28,12 @@ type UserStore interface {
 }
 
 // UserDB ...
-type UserDB struct {
+type userDB struct {
 	DB sqlbuilder.Database
 }
 
 // AddUser ...
-func (userDb *UserDB) AddUser(user *User) error {
+func (userDb *userDB) AddUser(user *User) error {
 
 	dbs := userDb.DB
 	id, err := dbs.Collection("Users").Insert(user)
@@ -56,7 +56,7 @@ func (userDb *UserDB) AddUser(user *User) error {
 }
 
 // GetUserByID ...
-func (userDb *UserDB) GetUserByID(id int64) (*User, error) {
+func (userDb *userDB) GetUserByID(id int64) (*User, error) {
 
 	dbs := userDb.DB
 	col := dbs.Collection("Users")
@@ -73,7 +73,7 @@ func (userDb *UserDB) GetUserByID(id int64) (*User, error) {
 }
 
 // GetUsers ...
-func (userDb *UserDB) GetUsers() (*[]User, error) {
+func (userDb *userDB) GetUsers() (*[]User, error) {
 
 	var users []User
 	dbs := userDb.DB
@@ -86,7 +86,7 @@ func (userDb *UserDB) GetUsers() (*[]User, error) {
 }
 
 // DeleteUserByID ...
-func (userDb *UserDB) DeleteUserByID(id int64) error {
+func (userDb *userDB) DeleteUserByID(id int64) error {
 
 	dbs := userDb.DB
 	col := dbs.Collection("Users")
@@ -96,7 +96,7 @@ func (userDb *UserDB) DeleteUserByID(id int64) error {
 }
 
 // UpdateUser ...
-func (userDb *UserDB) UpdateUser(user *User) error {
+func (userDb *userDB) UpdateUser(user *User) error {
 
 	dbs := userDb.DB
 	col := dbs.Collection("Users")

@@ -3,6 +3,6 @@ package usermgmt
 import "github.com/sirupsen/logrus"
 
 // AppLogger ...
-type AppLogger struct {
+type appLogger struct {
 	logger *logrus.Logger
 }

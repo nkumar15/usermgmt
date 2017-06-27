@@ -11,6 +11,7 @@ import (
 
 	"os"
 
+	"github.com/gorilla/mux"
 	"github.com/nkumar15/usermgmt"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
@@ -85,7 +86,16 @@ func serveWeb() {
 
 	logger := setupLogger("development")
 	conf := usermgmt.NewConfiguration(db, logger)
-	router := conf.NewRouter()
+	router := mux.NewRouter()
+
+	addUserHandler := &usermgmt.AppHandler{Conf: conf, H: usermgmt.AddUserHandler}
+	router.Handle("/user", addUserHandler).Methods("POST")
+
+	getUserHandler := &usermgmt.AppHandler{Conf: conf, H: usermgmt.GetUserHandler}
+	router.Handle("/user/{id}", getUserHandler).Methods("GET")
+
+	getUsersHandler := &usermgmt.AppHandler{Conf: conf, H: usermgmt.GetUsersHandler}
+	router.Handle("/user", getUsersHandler).Methods("GET")
 
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
