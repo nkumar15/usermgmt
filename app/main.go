@@ -12,7 +12,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/nkumar15/usermgmt"
+	um "github.com/nkumar15/usermgmt"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 )
@@ -85,17 +85,23 @@ func serveWeb() {
 	}
 
 	logger := setupLogger("development")
-	conf := usermgmt.NewConfiguration(db, logger)
+	conf := um.NewConfiguration(db, logger)
 	router := mux.NewRouter()
 
-	addUserHandler := &usermgmt.AppHandler{Conf: conf, H: usermgmt.AddUserHandler}
-	router.Handle("/user", addUserHandler).Methods("POST")
+	addUserHandler := &um.AppHandler{Conf: conf, H: um.AddUserHandler}
+	router.Handle(um.AddUserRoute, addUserHandler).Methods("POST")
 
-	getUserHandler := &usermgmt.AppHandler{Conf: conf, H: usermgmt.GetUserHandler}
-	router.Handle("/user/{id}", getUserHandler).Methods("GET")
+	getUserHandler := &um.AppHandler{Conf: conf, H: um.GetUserHandler}
+	router.Handle(um.GetUserRoute, getUserHandler).Methods("GET")
 
-	getUsersHandler := &usermgmt.AppHandler{Conf: conf, H: usermgmt.GetUsersHandler}
-	router.Handle("/user", getUsersHandler).Methods("GET")
+	getUsersHandler := &um.AppHandler{Conf: conf, H: um.GetUsersHandler}
+	router.Handle(um.GetUsersRoute, getUsersHandler).Methods("GET")
+
+	deleteUserHandler := &um.AppHandler{Conf: conf, H: um.DeleteUserHandler}
+	router.Handle(um.DeleteUserRoute, deleteUserHandler).Methods("DELETE")
+
+	updateUserHandler := &um.AppHandler{Conf: conf, H: um.UpdateUserHandler}
+	router.Handle(um.UpdateUserRoute, updateUserHandler).Methods("DELETE")
 
 	n := negroni.New()
 	n.Use(negroni.NewLogger())

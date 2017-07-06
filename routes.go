@@ -15,35 +15,43 @@ type Route struct {
 // Routes ...
 type Routes []Route
 
+const (
+	AddUserRoute    = "/user"
+	GetUserRoute    = "/user/{Id}"
+	GetUsersRoute   = "/user"
+	DeleteUserRoute = "/user/{Id}"
+	UpdateUserRoute = "/user/{Id}"
+)
+
 // var userRoutes = Routes{
 // 	Route{
 // 		"AddUserHandler",
 // 		"POST",
 // 		"/user",
-// 		conf.AddUserHandler,
+// 		AddUserHandler,
 // 	},
 // 	Route{
 // 		"GetUserHandler",
 // 		"GET",
 // 		"/user/{Id}",
-// 		conf.GetUserHandler,
+// 		GetUserHandler,
 // 	},
 // 	Route{
 // 		"GetUsersHandler",
 // 		"GET",
 // 		"/user",
-// 		conf.GetUsersHandler,
+// 		GetUsersHandler,
 // 	},
 // 	Route{
 // 		"DeleteUserHandler",
 // 		"DELETE",
 // 		"/user/{Id}",
-// 		conf.DeleteUserHandler,
+// 		DeleteUserHandler,
 // 	},
 // 	Route{
 // 		"UpdateUserHandler",
 // 		"PUT",
 // 		"/user/{Id}",
-// 		conf.UpdateUserHandler,
+// 		UpdateUserHandler,
 // 	},
 // }

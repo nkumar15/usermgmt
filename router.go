@@ -1,10 +1,10 @@
 package usermgmt
 
-// // NewRouter ...
-// func (conf *Configuration) NewRouter() *mux.Router {
+// NewRouter ...
+// func NewRouter(Conf *Configuration) *mux.Router {
 
 // 	router := mux.NewRouter().StrictSlash(true)
-// 	for _, route := range conf.userRoutes() {
+// 	for _, route := range userRoutes {
 // 		var handler http.Handler
 
 // 		handler = route.HandlerFunc

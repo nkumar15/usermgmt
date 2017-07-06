@@ -25,15 +25,15 @@ func NewConfiguration(db sqlbuilder.Database, logger *logrus.Logger) *Configurat
 
 // AppHandler ...
 type AppHandler struct {
-	Conf *Configuration
-	H    func(*Configuration, http.ResponseWriter, *http.Request) (int, error)
+	Conf    *Configuration
+	Handler func(*Configuration, http.ResponseWriter, *http.Request) (int, error)
 }
 
 // Our ServeHTTP method is mostly the same, and also has the ability to
 // access our *appContext's fields (templates, loggers, etc.) as well.
 func (ah AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Updated to pass ah.appContext as a parameter to our handler type.
-	status, err := ah.H(ah.Conf, w, r)
+	status, err := ah.Handler(ah.Conf, w, r)
 	if err != nil {
 		log.Printf("HTTP %d: %q", status, err)
 		switch status {
