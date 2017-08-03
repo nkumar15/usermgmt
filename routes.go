@@ -22,36 +22,3 @@ const (
 	DeleteUserRoute = "/user/{Id}"
 	UpdateUserRoute = "/user/{Id}"
 )
-
-// var userRoutes = Routes{
-// 	Route{
-// 		"AddUserHandler",
-// 		"POST",
-// 		"/user",
-// 		AddUserHandler,
-// 	},
-// 	Route{
-// 		"GetUserHandler",
-// 		"GET",
-// 		"/user/{Id}",
-// 		GetUserHandler,
-// 	},
-// 	Route{
-// 		"GetUsersHandler",
-// 		"GET",
-// 		"/user",
-// 		GetUsersHandler,
-// 	},
-// 	Route{
-// 		"DeleteUserHandler",
-// 		"DELETE",
-// 		"/user/{Id}",
-// 		DeleteUserHandler,
-// 	},
-// 	Route{
-// 		"UpdateUserHandler",
-// 		"PUT",
-// 		"/user/{Id}",
-// 		UpdateUserHandler,
-// 	},
-// }

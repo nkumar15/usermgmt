@@ -1,7 +1,6 @@
 package usermgmt
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -29,24 +28,21 @@ type AppHandler struct {
 	Handler func(*Configuration, http.ResponseWriter, *http.Request) (int, error)
 }
 
-// Our ServeHTTP method is mostly the same, and also has the ability to
-// access our *appContext's fields (templates, loggers, etc.) as well.
+// ServeHTTP ...
 func (ah AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Updated to pass ah.appContext as a parameter to our handler type.
+
 	status, err := ah.Handler(ah.Conf, w, r)
+	requestID := r.Header.Get("X-Request-Id")
 	if err != nil {
-		log.Printf("HTTP %d: %q", status, err)
+		ah.Conf.appLogger.logger.Debugf("HTTP %s %s %s %s %d %q", requestID, r.Host, r.URL.Path, r.Method, status, err)
 		switch status {
 		case http.StatusNotFound:
 			httpStatusNotFound(w, r, err)
-
-			// And if we wanted a friendlier error page, we can
-			// now leverage our context instance - e.g.
-			// err := ah.renderTemplate(w, "http_404.tmpl", nil)
 		case http.StatusInternalServerError:
 			httpStatusInternalServerError(w, err)
 		default:
 			http.Error(w, http.StatusText(status), status)
 		}
 	}
+	ah.Conf.appLogger.logger.Debugf("HTTP %s %s %s %s %d", requestID, r.Host, r.URL.Path, r.Method, status)
 }

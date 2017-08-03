@@ -41,7 +41,8 @@ func (userDb *userDB) AddUser(user *User) error {
 		return err
 	}
 
-	// what if record inserted but interface type is not determined correctly
+	// Todo and check:
+	//what if record inserted but interface type is not determined correctly
 	// For eg here in sqlite3 it is int64, what if returned int for pg?
 	// this code won't work in pg
 	// How to deal with this situation?
