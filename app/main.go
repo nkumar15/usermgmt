@@ -67,21 +67,7 @@ func serveWeb() {
 	conf := um.NewConfiguration(db, logger)
 	router := mux.NewRouter()
 
-	addUserHandler := &um.AppHandler{Conf: conf, Handler: um.AddUserHandler}
-	router.Handle(um.AddUserRoute, addUserHandler).Methods("POST")
-
-	getUserHandler := &um.AppHandler{Conf: conf, Handler: um.GetUserHandler}
-	router.Handle(um.GetUserRoute, getUserHandler).Methods("GET")
-
-	getUsersHandler := &um.AppHandler{Conf: conf, Handler: um.GetUsersHandler}
-	router.Handle(um.GetUsersRoute, getUsersHandler).Methods("GET")
-
-	deleteUserHandler := &um.AppHandler{Conf: conf, Handler: um.DeleteUserHandler}
-	router.Handle(um.DeleteUserRoute, deleteUserHandler).Methods("DELETE")
-
-	updateUserHandler := &um.AppHandler{Conf: conf, Handler: um.UpdateUserHandler}
-	router.Handle(um.UpdateUserRoute, updateUserHandler).Methods("DELETE")
-
+	um.RegisterHandlers(router, conf)
 	n := negroni.New()
 	n.Use(xrequestid.New(16))
 	n.UseHandler(router)

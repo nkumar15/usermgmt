@@ -57,4 +57,5 @@ func renderJSON(w http.ResponseWriter, data interface{}) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf8")
 	w.Write(j)
+	w.WriteHeader(http.StatusOK)
 }
