@@ -52,7 +52,7 @@ func (uh *userHandler) addUser(w http.ResponseWriter, r *http.Request) {
 		httpStatusInternalServerError(w, err)
 	}
 
-	if err := conf.userDb.AddUser(user); err != nil {
+	if err := conf.db.AddUser(user); err != nil {
 		httpStatusInternalServerError(w, err)
 	}
 	renderJSON(w, user)
@@ -67,7 +67,7 @@ func (uh *userHandler) getUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	conf := uh.Conf
-	user, err := conf.userDb.GetUserByID(id)
+	user, err := conf.db.GetUserByID(id)
 	if err != nil {
 		if err.Error() == "ErrNoMoreRows" {
 			httpStatusNotFound(w, r, err)
@@ -80,7 +80,7 @@ func (uh *userHandler) getUser(w http.ResponseWriter, r *http.Request) {
 // GetUsersHandler ...
 func (uh *userHandler) getUsers(w http.ResponseWriter, r *http.Request) {
 	conf := uh.Conf
-	users, err := conf.userDb.GetUsers()
+	users, err := conf.db.GetUsers()
 	if err != nil {
 		httpStatusInternalServerError(w, err)
 	}
@@ -96,7 +96,7 @@ func (uh *userHandler) deleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	conf := uh.Conf
-	if err = conf.userDb.DeleteUserByID(id); err != nil {
+	if err = conf.db.DeleteUserByID(id); err != nil {
 		httpStatusInternalServerError(w, err)
 	}
 	httpStatusNoContent(w, r)
@@ -121,7 +121,7 @@ func (uh *userHandler) updateUser(w http.ResponseWriter, r *http.Request) {
 
 	user.ID = id
 	conf := uh.Conf
-	if err := conf.userDb.UpdateUser(user); err != nil {
+	if err := conf.db.UpdateUser(user); err != nil {
 		httpStatusInternalServerError(w, err)
 	}
 	renderJSON(w, user)

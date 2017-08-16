@@ -8,11 +8,8 @@ import (
 
 func fillUser(user *User) {
 	user.Name = "Neeraj"
-	user.GUID = "Guid"
 	user.Password = "pwd"
 	user.Email = "email"
-	user.Salt = "salt"
-	user.JoinedDate = "11/11/11"
 }
 
 func httpGenericErr(w http.ResponseWriter) {

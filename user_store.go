@@ -11,19 +11,16 @@ import (
 type User struct {
 	ID         int64  `db:"Id,omitempty"`
 	Name       string `db:"Name"`
-	GUID       string `db:"Guid"`
-	Password   string `db:"Password"`
 	Email      string `db:"Email"`
-	Salt       string `db:"Salt"`
-	JoinedDate string `db:"JoinedDate"`
+	Password   string `db:"Password"`
 }
 
 // UserStore ...
 type UserStore interface {
 	AddUser(*User) error
-	GetUserById(id int64) (*User, error)
+	GetUserByID(id int64) (*User, error)
 	GetUsers() (*[]User, error)
-	DeleteUserById(id int64) error
+	DeleteUserByID(id int64) error
 	UpdateUser(user *User) error
 }
 

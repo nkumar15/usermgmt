@@ -7,15 +7,15 @@ import (
 
 //Configuration ...
 type Configuration struct {
-	userDb    userDB
+	db        UserStore
 	appLogger appLogger
 }
 
 // NewConfiguration ...
 func NewConfiguration(db sqlbuilder.Database, logger *logrus.Logger) *Configuration {
 
-	usrDb := userDB{DB: db}
+	usrDb := &userDB{DB: db}
 	appLog := appLogger{logger: logger}
-	conf := Configuration{userDb: usrDb, appLogger: appLog}
+	conf := Configuration{db: usrDb, appLogger: appLog}
 	return &conf
 }

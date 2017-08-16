@@ -3,11 +3,8 @@
 CREATE TABLE `Users` (
 	`Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`Name`	TEXT NOT NULL,
-	`Guid`	TEXT NULL,
 	`Email`	TEXT NULL,
 	`Password`	TEXT NOT NULL,
-	`Salt`	TEXT  NULL,
-	`JoinedDate` TEXT NULL
 );
 
 -- +goose Down
