@@ -26,7 +26,7 @@ func RegisterHandlers(router *mux.Router, conf *Configuration) {
 	router.HandleFunc(GetUserRoute, uh.getUser).Methods("GET")
 	router.HandleFunc(GetUsersRoute, uh.getUsers).Methods("GET")
 	router.HandleFunc(DeleteUserRoute, uh.deleteUser).Methods("DELETE")
-	router.HandleFunc(UpdateUserRoute, uh.updateUser).Methods("DELETE")
+	router.HandleFunc(UpdateUserRoute, uh.updateUser).Methods("PUT")
 }
 
 func getUserIDFromRequest(r *http.Request) (int64, error) {
