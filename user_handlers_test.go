@@ -1,13 +1,17 @@
 package usermgmt
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
@@ -104,44 +108,40 @@ func Test_getUsers(t *testing.T) {
 	}
 }
 
-// func Test_getUser(t *testing.T) {
+func Test_getUser(t *testing.T) {
 
-// 	logger := appLogger{logger: setupLogger()}
-// 	db := &mockDB{}
-// 	conf := &Configuration{db, logger}
-// 	hndlrs := &userHandler{Conf: conf}
+	logger := appLogger{logger: setupLogger()}
+	db := &mockDB{}
+	conf := &Configuration{db, logger}
+	hndlrs := &userHandler{Conf: conf}
 
-// 	rec := httptest.NewRecorder()
+	router := mux.NewRouter()
+	router.HandleFunc(GetUserRoute, hndlrs.getUser)
+	http.Handle("/", router)
 
-// 	r := mux.NewRouter()
-// 	ts := httptest.NewServer(r)
-// 	defer ts.Close()
+	req, _ := http.NewRequest("GET", "/user/0", nil)
+	rec := httptest.NewRecorder()
 
-// 	// Forced to use this approach, Wish setVars in gorilla context gets public
-// 	// But still not complete
-// 	r.HandleFunc("/user/1", http.HandlerFunc(hndlrs.getUser))
+	router.ServeHTTP(rec, req)
 
-// 	if status := rec.Code; status != http.StatusOK {
-// 		t.Errorf("get user failed with response code %v", rec.Code)
-// 	}
+	if status := rec.Code; status != http.StatusOK {
+		t.Errorf("get user failed with response code %v", rec.Code)
+	}
 
-// 	//idx := 0
-// 	//expected := users[idx]
-// 	//recieved := new(User)
-// 	body, err := ioutil.ReadAll(rec.Body)
-// 	if err != nil {
-// 		panic(err.Error())
-// 	}
-// 	bodyString := string(body)
-// 	println("Body :", bodyString)
+	idx := 0
+	expected := users[idx]
+	recieved := new(User)
+	body, err := ioutil.ReadAll(rec.Body)
+	if err != nil {
+		panic(err.Error())
+	}
 
-// 	// err = json.Unmarshal(body, &recieved)
-// 	// if err != nil {
-// 	// 	panic(err.Error())
-// 	// }
+	err = json.Unmarshal(body, &recieved)
+	if err != nil {
+		panic(err.Error())
+	}
 
-// 	// if reflect.DeepEqual(recieved, expected) != true {
-// 	// 	t.Errorf("Get user returned invaid user %v", expected.ID)
-// 	// }
-
-// }
+	if diff := cmp.Diff(expected, *recieved); diff != "" {
+		t.Errorf("GetUser returned User id %v but expected %v", recieved.ID, expected.ID)
+	}
+}
