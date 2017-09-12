@@ -55,6 +55,7 @@ func (uh *userHandler) addUser(w http.ResponseWriter, r *http.Request) {
 	if err := conf.db.AddUser(user); err != nil {
 		httpStatusInternalServerError(w, err)
 	}
+
 	renderJSON(w, user)
 }
 
@@ -74,7 +75,12 @@ func (uh *userHandler) getUser(w http.ResponseWriter, r *http.Request) {
 		}
 		httpStatusInternalServerError(w, err)
 	}
-	renderJSON(w, user)
+
+	if conf.serveAsAPI == true {
+		renderJSON(w, user)
+	} else {
+		renderUser(w, user)
+	}
 }
 
 // GetUsersHandler ...
@@ -84,7 +90,13 @@ func (uh *userHandler) getUsers(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		httpStatusInternalServerError(w, err)
 	}
-	renderJSON(w, users)
+
+	if conf.serveAsAPI == true {
+		renderJSON(w, users)
+	} else {
+		renderUsers(w, users)
+	}
+
 }
 
 // DeleteUserHandler ...

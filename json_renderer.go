@@ -12,7 +12,7 @@ func fillUser(user *User) {
 	user.Email = "email"
 }
 
-func httpGenericErr(w http.ResponseWriter) {
+func httpGenericError(w http.ResponseWriter) {
 
 	http.Error(w, "Something went wrong, check the logs", http.StatusInternalServerError)
 }
@@ -48,11 +48,12 @@ func renderJSON(w http.ResponseWriter, data interface{}) {
 	j, err = json.Marshal(data)
 	if err != nil {
 		log.Println(err)
-		httpGenericErr(w)
+		httpGenericError(w)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf8")
-	w.Write(j)
 	w.WriteHeader(http.StatusOK)
+	w.Write(j)
+
 }

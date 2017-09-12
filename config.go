@@ -7,15 +7,16 @@ import (
 
 //Configuration ...
 type Configuration struct {
-	db        UserStore
-	appLogger appLogger
+	db         UserStore
+	appLogger  appLogger
+	serveAsAPI bool
 }
 
 // NewConfiguration ...
-func NewConfiguration(db sqlbuilder.Database, logger *logrus.Logger) *Configuration {
+func NewConfiguration(db sqlbuilder.Database, logger *logrus.Logger, serveAsAPI bool) *Configuration {
 
 	usrDb := &userDB{DB: db}
 	appLog := appLogger{logger: logger}
-	conf := Configuration{db: usrDb, appLogger: appLog}
+	conf := Configuration{db: usrDb, appLogger: appLog, serveAsAPI: serveAsAPI}
 	return &conf
 }

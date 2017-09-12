@@ -64,7 +64,7 @@ func serveWeb() {
 	}
 
 	logger := setupLogger()
-	conf := um.NewConfiguration(db, logger)
+	conf := um.NewConfiguration(db, logger, false)
 	router := mux.NewRouter()
 
 	um.RegisterHandlers(router, conf)

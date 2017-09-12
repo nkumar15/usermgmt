@@ -70,7 +70,7 @@ type mockDB struct{}
 
 var mockdb = &mockDB{}
 
-var conf = &Configuration{mockdb, logger}
+var conf = &Configuration{mockdb, logger, true}
 var hndlrs = &userHandler{Conf: conf}
 
 func (mockdb *mockDB) GetUsers() (*[]User, error) {
